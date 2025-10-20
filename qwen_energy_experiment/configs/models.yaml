@@ -1,0 +1,85 @@
+# Model configurations for Qwen family energy consumption experiment
+# Based on the systematic selection from the implementation plan
+
+models:
+  # Generation comparison (72B parameter models across generations)
+  qwen-72b:
+    name: "Qwen-72B"
+    model_path: "Qwen/Qwen-72B"
+    parameters: 72_000_000_000
+    generation: "1.0"
+    release_date: "2023-12"
+    max_context_length: 4096
+    torch_dtype: "auto"
+    
+  qwen2-72b:
+    name: "Qwen2-72B"
+    model_path: "Qwen/Qwen2-72B"
+    parameters: 72_000_000_000
+    generation: "2.0"
+    release_date: "2024-06"
+    max_context_length: 4096
+    torch_dtype: "auto"
+    
+  qwen2_5-72b:
+    name: "Qwen2.5-72B"
+    model_path: "Qwen/Qwen2.5-72B"
+    parameters: 72_000_000_000
+    generation: "2.5"
+    release_date: "2025-01"
+    max_context_length: 4096
+    torch_dtype: "auto"
+  
+  # Scale comparison (Generation 2.5 models at different sizes)
+  qwen2_5-0_5b:
+    name: "Qwen2.5-0.5B"
+    model_path: "Qwen/Qwen2.5-0.5B"
+    parameters: 500_000_000
+    generation: "2.5"
+    release_date: "2024-09"
+    max_context_length: 4096
+    torch_dtype: "auto"
+    
+  qwen2_5-7b:
+    name: "Qwen2.5-7B"
+    model_path: "Qwen/Qwen2.5-7B"
+    parameters: 7_000_000_000
+    generation: "2.5"
+    release_date: "2024-09"
+    max_context_length: 4096
+    torch_dtype: "auto"
+
+# Hardware requirements and warnings
+hardware_requirements:
+  minimum_vram_gb: 24  # RTX 4090 minimum
+  recommended_vram_gb: 48  # For larger models
+  
+  model_memory_estimates:
+    qwen-72b: 
+      vram_gb_fp16: 144  # May require quantization
+      vram_gb_int8: 72   # Fits on high-end GPUs
+    qwen2-72b:
+      vram_gb_fp16: 144
+      vram_gb_int8: 72
+    qwen2_5-72b:
+      vram_gb_fp16: 144  
+      vram_gb_int8: 72
+    qwen2_5-0_5b:
+      vram_gb_fp16: 1
+      vram_gb_int8: 0.5
+    qwen2_5-7b:
+      vram_gb_fp16: 14
+      vram_gb_int8: 7
+
+# Quantization strategy for memory management
+quantization:
+  enabled: true
+  method: "int8"  # or "int4" for more aggressive compression
+  quality_threshold: 0.95  # Maintain 95% of original quality
+  
+# Model loading configuration
+loading_config:
+  trust_remote_code: true
+  gpu_memory_utilization: 0.9
+  swap_space_gb: 4
+  max_context_length: 4096

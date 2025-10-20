@@ -1,0 +1,140 @@
+# Experiment configuration for Qwen energy consumption study
+
+experiment:
+  name: "qwen_energy_consumption_study"
+  version: "1.0"
+  description: "Comparing energy consumption across Qwen LLM generations"
+  
+  # Research questions
+  research_questions:
+    rq1: "How does energy consumption of Qwen family evolve between releases?"
+    rq1_1: "Do newer versions provide better performance per unit of energy?"
+    rq1_2: "How has the relationship between model scale and energy consumption evolved?"
+    rq2: "What key factors of inference tasks influence energy consumption?"
+
+# Experimental design
+design:
+  type: "factorial"
+  factors:
+    - name: "model_version"
+      levels: 5  # 5 different models
+    - name: "task_type" 
+      levels: 4  # 4 different task categories
+  
+  repetitions: 20
+  total_runs: 400  # 5 models × 4 tasks × 20 reps
+  
+  randomization:
+    method: "latin_square"
+    block_by_session: true
+
+# Measurement configuration
+measurement:
+  energy:
+    gpu_sampling_rate_hz: 100
+    integration_method: "trapezoidal"
+    rapl_overflow_handling: true
+    
+  primary_metrics:
+    - "energy_joules"
+    - "latency_ms" 
+    - "throughput_output_tokens_per_sec"
+    - "energy_per_output_token"
+    - "output_tokens_per_joule"
+    
+  diagnostic_metrics:
+    - "gpu_utilization_percent"
+    - "gpu_temperature_celsius"
+    - "gpu_power_profile"
+
+# Thermal management
+thermal_management:
+  enabled: true
+  baseline_gpu_temp_celsius: 45
+  baseline_gpu_power_watts: 30
+  max_gpu_temp_celsius: 80
+  min_cooldown_seconds: 180
+  max_cooldown_seconds: 1200
+  thermal_check_interval_seconds: 10
+
+# Model execution configuration
+model_execution:
+  warmup:
+    enabled: true
+    discard_first_generation: true
+    additional_warmup_prompts: 2
+    warmup_prompt: "Hello, how are you today?"
+    
+  loading_strategy:
+    load_once_per_session_block: true
+    unload_between_models: true
+    model_cooldown_minutes: 5
+    
+  memory_management:
+    gpu_memory_utilization: 0.9
+    enable_model_caching: false  # Disabled due to VRAM constraints
+    clear_cache_between_models: true
+
+# Data collection and storage  
+data:
+  checkpointing:
+    enabled: true
+    checkpoint_dir: "data/checkpoints"
+    save_after_each_run: true
+    resume_incomplete_sessions: true
+    
+  output_formats:
+    - "json"  # Primary format
+    - "csv"   # For analysis
+    
+  backup:
+    enabled: true
+    backup_interval_runs: 50
+    backup_dir: "data/backups"
+
+# Analysis configuration
+analysis:
+  statistical_tests:
+    significance_level: 0.05
+    effect_size_threshold: 0.01  # Small effect size
+    multiple_comparison_correction: "benjamini_hochberg"
+    
+  primary_comparisons:
+    - "energy_by_model_generation"
+    - "efficiency_by_model_generation" 
+    - "energy_by_task_type"
+    - "scaling_relationships"
+    
+  visualization:
+    create_plots: true
+    plot_formats: ["png", "svg"]
+    plot_dpi: 300
+
+# Resource management
+resources:
+  time_budget:
+    estimated_total_hours: 25
+    max_session_hours: 8
+    
+  hardware_monitoring:
+    monitor_gpu_memory: true
+    monitor_system_load: true
+    alert_on_thermal_issues: true
+    
+  error_handling:
+    max_retries_per_run: 3
+    continue_on_single_failure: true
+    abort_on_repeated_failures: 5
+
+# Logging configuration
+logging:
+  level: "INFO"
+  structured_logging: true
+  log_to_file: true
+  log_file: "logs/experiment.log"
+  
+  components:
+    energy_monitor: "DEBUG"
+    model_manager: "INFO"  
+    task_executor: "INFO"
+    experiment_controller: "INFO"

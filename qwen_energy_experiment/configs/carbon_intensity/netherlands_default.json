@@ -1,0 +1,8 @@
+{
+  "intensity_gco2e_per_kwh": 370.0,
+  "source": "Netherlands_Grid_2024_Annual_Average",
+  "timestamp": "2024-01-01T00:00:00Z",
+  "location": "Netherlands",
+  "data_provider": "Manual_Configuration",
+  "notes": "Netherlands annual average carbon intensity for 2024, based on grid mix with significant renewable sources"
+}

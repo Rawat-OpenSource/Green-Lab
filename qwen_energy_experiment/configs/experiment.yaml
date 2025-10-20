@@ -1,0 +1,72 @@
+# Minimal experiment configuration for Qwen energy consumption study
+# Implementation of Paper Section 4.4: Experiment Design (core components only)
+
+experiment:
+  name: "qwen_energy_consumption_study"
+  version: "1.0"
+  description: "Comparing energy consumption across Qwen LLM generations"
+
+# Experimental design - ESSENTIAL
+design:
+  type: "factorial"
+  repetitions: 20
+  total_runs: 400  # 5 models × 4 tasks × 20 reps
+  
+  randomization:
+    method: "latin_square"
+    block_by_session: true
+
+# Measurement configuration - ESSENTIAL (Paper Section 3.3: Metrics)
+measurement:
+  energy:
+    gpu_sampling_rate_hz: 100
+    integration_method: "trapezoidal"
+    rapl_overflow_handling: true
+    
+  primary_metrics:
+    - "energy_joules"
+    - "latency_ms" 
+    - "throughput_output_tokens_per_sec"
+    - "energy_per_output_token"
+
+# Thermal management - ESSENTIAL (Paper Section 5.2.3)
+thermal_management:
+  enabled: true
+  baseline_gpu_temp_celsius: 45
+  max_gpu_temp_celsius: 80
+  min_cooldown_seconds: 180
+  max_cooldown_seconds: 1200
+
+# Model execution - ESSENTIAL (Paper Section 5.2.2)
+model_execution:
+  warmup:
+    enabled: true
+    discard_first_generation: true
+    additional_warmup_prompts: 2
+    warmup_prompt: "Hello, how are you today?"
+    
+  loading_strategy:
+    load_once_per_session_block: true
+    unload_between_models: true
+    model_cooldown_minutes: 5
+    
+  memory_management:
+    gpu_memory_utilization: 0.9
+    clear_cache_between_models: true
+
+# Data collection - ESSENTIAL (Paper Section 4.4.5)
+data:
+  checkpointing:
+    enabled: true
+    checkpoint_dir: "data/checkpoints"
+    save_after_each_run: true
+    resume_incomplete_sessions: true
+    
+  output_formats:
+    - "json"  # Primary format
+
+# Basic logging - ESSENTIAL
+logging:
+  level: "INFO"
+  log_to_file: true
+  log_file: "logs/experiment.log"

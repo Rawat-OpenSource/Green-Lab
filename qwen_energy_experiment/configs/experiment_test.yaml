@@ -1,0 +1,131 @@
+# Test configuration for quick validation runs
+# Implementation of Paper Section 4.4: Experiment Design (reduced scale)
+# Reduced repetitions and settings for development/testing
+
+experiment:
+  name: "qwen_energy_test"
+  version: "1.0"
+  description: "Quick test configuration for Qwen energy experiment validation"
+
+# Experimental design - REDUCED for testing
+design:
+  type: "factorial"
+  factors:
+    - name: "model_version"
+      levels: 2  # Test with just 2 models
+    - name: "task_type" 
+      levels: 2  # Test with just 2 task categories
+  
+  repetitions: 2  # REDUCED from Paper Section 4.4.4 (20 repetitions) to 2
+  total_runs: 8   # 2 models × 2 tasks × 2 reps (vs Paper: 400 runs)
+  
+  randomization:
+    method: "latin_square"
+    block_by_session: true
+
+# Same measurement configuration as main experiment (Paper Section 3.3: Metrics)
+measurement:
+  energy:
+    gpu_sampling_rate_hz: 100
+    integration_method: "trapezoidal"
+    rapl_overflow_handling: true
+    
+  primary_metrics:
+    - "energy_joules"
+    - "latency_ms" 
+    - "throughput_output_tokens_per_sec"
+    - "energy_per_output_token"
+    - "output_tokens_per_joule"
+    
+  diagnostic_metrics:
+    - "gpu_utilization_percent"
+    - "gpu_temperature_celsius"
+
+# Relaxed thermal management for faster testing (Paper Section 5.2.3: Cool-Down reduced)
+thermal_management:
+  enabled: true
+  baseline_gpu_temp_celsius: 45
+  baseline_gpu_power_watts: 30
+  max_gpu_temp_celsius: 80
+  min_cooldown_seconds: 30   # REDUCED from 180
+  max_cooldown_seconds: 300  # REDUCED from 1200
+  thermal_check_interval_seconds: 10
+
+# basic model execution (Paper Section 5.2.2: Warm-up reduced)
+model_execution:
+  warmup:
+    enabled: true
+    discard_first_generation: true
+    additional_warmup_prompts: 1  # REDUCED from 2
+    warmup_prompt: "Hello, how are you today?"
+    
+  loading_strategy:
+    load_once_per_session_block: true
+    unload_between_models: true
+    model_cooldown_minutes: 1   # REDUCED from 5
+    
+  memory_management:
+    gpu_memory_utilization: 0.9
+    enable_model_caching: false
+    clear_cache_between_models: true
+
+# Same data collection settings (Paper Section 4.4.5: Procedure)
+data:
+  checkpointing:
+    enabled: true
+    checkpoint_dir: "data/checkpoints_test"
+    save_after_each_run: true
+    resume_incomplete_sessions: true
+    
+  output_formats:
+    - "json"
+    - "csv"
+    
+  backup:
+    enabled: false  # Disabled for testing
+
+# Same analysis configuration (Paper Section 4.5: Data Analysis)
+analysis:
+  statistical_tests:
+    significance_level: 0.05
+    effect_size_threshold: 0.01
+    multiple_comparison_correction: "benjamini_hochberg"
+    
+  primary_comparisons:
+    - "energy_by_model_generation"
+    - "efficiency_by_model_generation" 
+    - "energy_by_task_type"
+    
+  visualization:
+    create_plots: true
+    plot_formats: ["png"]
+    plot_dpi: 150  # REDUCED for faster generation
+
+# Reduced resource requirements (Paper Section 4.4.7: Time Budget scaled down)
+resources:
+  time_budget:
+    estimated_total_hours: 1
+    max_session_hours: 2
+    
+  hardware_monitoring:
+    monitor_gpu_memory: true
+    monitor_system_load: true
+    alert_on_thermal_issues: true
+    
+  error_handling:
+    max_retries_per_run: 2  # REDUCED from 3
+    continue_on_single_failure: true
+    abort_on_repeated_failures: 3  # REDUCED from 5
+
+# Debug logging for testing (Paper Section 5.2.1: Enhanced validation logging)
+logging:
+  level: "DEBUG"
+  structured_logging: true
+  log_to_file: true
+  log_file: "logs/test_experiment.log"
+  
+  components:
+    energy_monitor: "DEBUG"
+    model_manager: "DEBUG"  
+    task_executor: "DEBUG"
+    experiment_controller: "DEBUG"
