@@ -17,6 +17,14 @@ class CarbonIntensityConfig:
     intensity_gco2e_per_kwh: float = 370.0  # Netherlands 2024 average
     source: str = "Netherlands_Grid_2024_Annual_Average"
     location: str = "Netherlands"
+    
+    def to_dict(self) -> dict:
+        """Convert configuration to dictionary for serialization."""
+        return {
+            'intensity_gco2e_per_kwh': self.intensity_gco2e_per_kwh,
+            'source': self.source,
+            'location': self.location
+        }
 
 
 class CarbonCalculator:
