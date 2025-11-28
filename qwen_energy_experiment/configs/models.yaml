@@ -3,49 +3,49 @@
 
 models:
   # Generation comparison (72B parameter models across generations)
-  qwen-72b:
+  qwen:72b:
     name: "Qwen-72B"
-    model_path: "Qwen/Qwen-72B"
+    model_path: "qwen:72b"
     parameters: 72_000_000_000
     generation: "1.0"
     release_date: "2023-12"
     max_context_length: 4096
     torch_dtype: "auto"
     
-  qwen2-72b:
+  qwen2:72b:
     name: "Qwen2-72B"
-    model_path: "Qwen/Qwen2-72B"
+    model_path: "qwen2:72b"
     parameters: 72_000_000_000
     generation: "2.0"
     release_date: "2024-06"
     max_context_length: 4096
     torch_dtype: "auto"
     
-  qwen2_5-72b:
+  qwen2.5:72b:
     name: "Qwen2.5-72B"
-    model_path: "Qwen/Qwen2.5-72B"
+    model_path: "qwen2.5:72b"
     parameters: 72_000_000_000
     generation: "2.5"
     release_date: "2025-01"
     max_context_length: 4096
     torch_dtype: "auto"
   
-  # Scale comparison (Generation 2.5 models at different sizes)
-  qwen2_5-0_5b:
-    name: "Qwen2.5-0.5B"
-    model_path: "Qwen/Qwen2.5-0.5B"
-    parameters: 500_000_000
-    generation: "2.5"
-    release_date: "2024-09"
+  # Scale comparison (Generation 3 models at different sizes)
+  qwen3:0.6b:
+    name: "Qwen3-0.6B"
+    model_path: "qwen3:0.6b"
+    parameters: 600_000_000
+    generation: "3"
+    release_date: "2025-09"
     max_context_length: 4096
     torch_dtype: "auto"
     
-  qwen2_5-7b:
-    name: "Qwen2.5-7B"
-    model_path: "Qwen/Qwen2.5-7B"
-    parameters: 7_000_000_000
-    generation: "2.5"
-    release_date: "2024-09"
+  qwen3:235b:
+    name: "Qwen3-235B"
+    model_path: "qwen3:235b"
+    parameters: 235_000_000_000
+    generation: "3"
+    release_date: "2025-09"
     max_context_length: 4096
     torch_dtype: "auto"
 
@@ -55,21 +55,21 @@ hardware_requirements:
   recommended_vram_gb: 48  # For larger models
   
   model_memory_estimates:
-    qwen-72b: 
+    qwen:72b: 
       vram_gb_fp16: 144  # May require quantization
       vram_gb_int8: 72   # Fits on high-end GPUs
-    qwen2-72b:
+    qwen2:72b:
       vram_gb_fp16: 144
       vram_gb_int8: 72
-    qwen2_5-72b:
+    qwen2.5:72b:
       vram_gb_fp16: 144  
       vram_gb_int8: 72
-    qwen2_5-0_5b:
-      vram_gb_fp16: 1
-      vram_gb_int8: 0.5
-    qwen2_5-7b:
-      vram_gb_fp16: 14
-      vram_gb_int8: 7
+    qwen3:0.6b:
+      vram_gb_fp16: 1.2
+      vram_gb_int8: 0.6
+    qwen3:235b:
+      vram_gb_fp16: 470
+      vram_gb_int8: 235
 
 # Quantization strategy for memory management
 quantization:
