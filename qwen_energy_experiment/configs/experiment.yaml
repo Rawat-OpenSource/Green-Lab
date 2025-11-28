@@ -29,6 +29,15 @@ measurement:
     - "throughput_output_tokens_per_sec"
     - "energy_per_output_token"
 
+  diagnostic_metrics:
+    - "memory_usage"
+    - "gpu_utilization" 
+    - "power_consumption"
+    - "temperature"
+    - "throughput_tokens_per_sec"
+    - "time_to_first_token"
+    - "model_loading_time"
+
 # Thermal management - ESSENTIAL (Paper Section 5.2.3)
 thermal_management:
   enabled: true
