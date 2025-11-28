@@ -22,6 +22,9 @@ from src.measurement.carbon_calculator import CarbonIntensityConfig
 def setup_logging(level: str = "INFO") -> None:
     """Setup structured logging for the experiment."""
     log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+    # Create logs directory
+    Path("logs").mkdir(exist_ok=True)
     
     logging.basicConfig(
         level=getattr(logging, level.upper()),
@@ -32,10 +35,6 @@ def setup_logging(level: str = "INFO") -> None:
         ]
     )
     
-    # Create logs directory
-    Path("logs").mkdir(exist_ok=True)
-
-
 def parse_arguments() -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
