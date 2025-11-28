@@ -100,9 +100,9 @@ class GPUEnergyMonitor:
         """Get GPU hardware information."""
         try:
             return {
-                'name': pynvml.nvmlDeviceGetName(self.device).decode('utf-8'),
+                'name': pynvml.nvmlDeviceGetName(self.device),
                 'memory_total_mb': pynvml.nvmlDeviceGetMemoryInfo(self.device).total // (1024*1024),
-                'driver_version': pynvml.nvmlSystemGetDriverVersion().decode('utf-8')
+                'driver_version': pynvml.nvmlSystemGetDriverVersion()
             }
         except pynvml.NVMLError as e:
             logger.error(f"Failed to get GPU info: {e}")
